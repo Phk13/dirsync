@@ -52,19 +52,15 @@ func WalkFiles(root1 string, root2 string, exceptions []string, threads int) ([]
 	atomic.AddInt32(&counter1, 1)
 	for i := 0; i < threads; i++ {
 		wg.Add(1)
-		fmt.Printf("Starting thread root1[%d]\n", i)
 		go checkDir(root1DirChan, root1ResultChan, &wg, exceptions, &counter1)
 	}
-	fmt.Printf("Sending %s to root1DirChan\n", root1)
 	root1DirChan <- root1
 
 	atomic.AddInt32(&counter2, 1)
 	for i := 0; i < threads; i++ {
 		wg.Add(1)
-		fmt.Printf("Starting thread root2[%d]\n", i)
 		go checkDir(root2DirChan, root2ResultChan, &wg, exceptions, &counter2)
 	}
-	fmt.Printf("Sending %s to root2DirChan\n", root2)
 	root2DirChan <- root2
 
 	wg.Wait()
